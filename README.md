@@ -14,7 +14,7 @@ the repository its __yours__! You can build your own website, notebooks,
 etc. and share them with anyone you meet. Just make sure you link back
 to this course website. 
 
-
+Tingus Bingus: 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
 
 ### JupyterHub server: <https://compmech.uconn.edu/>
 
