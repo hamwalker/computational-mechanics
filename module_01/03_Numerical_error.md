@@ -4,10 +4,10 @@ jupytext:
   text_representation:
     extension: .md
     format_name: myst
-    format_version: 0.12
-    jupytext_version: 1.6.0
+    format_version: 0.13
+    jupytext_version: 1.11.4
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
@@ -77,7 +77,6 @@ c=0.25
 m=60
 g=9.81 
 
-
 def v_analytical(t,m,g,c):
     '''Analytical solution for the velocity of an object released from rest subject to 
     the force of gravity and the force of drag with drag coefficient, c
@@ -96,6 +95,10 @@ def v_analytical(t,m,g,c):
     v_terminal=np.sqrt(m*g/c)
     v= v_terminal*np.tanh(g*t/v_terminal)
     return v
+```
+
+```{code-cell} ipython3
+
 ```
 
 Inside the curly brackets—the placeholders for the values you want to
