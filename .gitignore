@@ -4,6 +4,6 @@ _build
 .ipynb_checkpoints/*
 */.ipynb_checkpoints/*
 # ignore *.ipynb notebooks, but keep the myst-nb versions
-*.ipynb
-*/*.ipynb
+
+
 
