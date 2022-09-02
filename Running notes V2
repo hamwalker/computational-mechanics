@@ -1,0 +1,96 @@
+import numpy as np
+
+# Functions
+
+Syntax for defining custom Python functions
+````python
+def function_name(arg_1, arg_2, ...):
+    '''
+    docstring: description of the function
+    '''
+    <body of the function>
+````
+
+# NumPy
+```python
+import numpy as np
+```
+
+commonly used functions are:
+
+* [`np.linspace()`](https://docs.scipy.org/doc/numpy/reference/generated/np.linspace.html)
+* [`np.ones()`](https://docs.scipy.org/doc/numpy/reference/generated/np.ones.html#np.ones)
+* [`np.zeros()`](https://docs.scipy.org/doc/numpy/reference/generated/np.zeros.html#np.zeros)
+* [`np.empty()`](https://docs.scipy.org/doc/numpy/reference/generated/np.empty.html#np.empty)
+* [`np.copy()`](https://docs.scipy.org/doc/numpy/reference/generated/np.copy.html#np.copy)
+
+## Arrays
+
+`np.ones()`<br>
+`np.zeros()`<br>
+
+`np.arange(start, stop, step)`<br>
+`np.linspace(start, stop, num)`<br>
+where `start` by default is zero, `stop` is not inclusive, and the default
+for `step` is one.
+
+### 2D arrays
+````python
+array_2d = np.array([[1, 2], [3, 4]])
+````
+The multiplication using the `'*'` operator is element-wise. If you want to do matrix multiplication use the `'@'` operator or `np.dot()`
+
+### 3D arrays
+Visualizing the dimensions of the `a_3D` array can be tricky, so here is
+a diagram that will help you to understand how the dimensions are
+assigned: each dimension is shown as  a coordinate axis. For a 3D array,
+on the "x axis", you have the sub-arrays that themselves are
+two-dimensional (matrices). Two of these 2D sub-arrays, in this
+case; each one has 3 rows and 4 columns. Study this sketch carefully,
+while comparing with how the array `a_3D` is printed out above. 
+
+<img src="images/3d_array_sketch.png" style="width: 400px;"/>
+
+Let's create a 3D array by reshaping a 1D array. You can use
+[`np.reshape()`](https://docs.scipy.org/doc/numpy/reference/generated/np.reshape.html),
+where you pass the array we want to reshape and the shape we want to
+give it, i.e., the number of elements in each dimension. 
+
+*Syntax*
+ 
+`np.reshape(array, newshape)`</br>
+
+a = np.arange(24)
+a_3D = np.reshape(a, (2, 3, 4))
+print(a_3D)
+
+### Indexing 
+`X[Row, Column]` (Starting with 0)
+`:` means all
+
+For 3D `X[matrix, row, column]`
+
+# Time
+Use `%%Time` in start of code block 
+
+%%time
+arr_1 = np.random.randint(0,100, size=10000)
+arr_2 = np.random.randint(0,100, size=10000)
+
+arr_res= arr_1**2+arr_2**2
+
+# Plotting
+import matplotlib.pyplot as plt
+increase the font size and linewidth
+
+plt.rcParams.update({'font.size': 22})
+plt.rcParams['lines.linewidth'] = 3
+
+````python
+{:5.2f}
+````
+where 
+
+- `:5` prints something with whitespace that is 5 spaces total
+- `.2` prints 2 significant figures after the decimal
+- `f` tells `format` that the input is a floating point number to print
