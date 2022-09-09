@@ -5,12 +5,13 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.10.3
+    jupytext_version: 1.11.4
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
+
 ```{code-cell} ipython3
 import numpy as np
 import matplotlib.pyplot as plt
@@ -31,17 +32,20 @@ Suppose the temperature of the corpse is 85$^o$F at 11:00 am. Then, 2 hours late
 
 Assume ambient temperature is a constant 65$^{o}$F.
 
-1. Use Python to calculate $K$ using a finite difference approximation, $\frac{dT}{dt} \approx \frac{T(t+\Delta t)-T(t)}{\Delta t}$. 
+1. Use Python to calculate $K$ using a finite difference approximation, $\frac{dT}{dt} \approx \frac{T(t+\Delta t)-T(t)}{\Delta t}$.
 
 ```{code-cell} ipython3
+
 ```
 
-2. Change your work from problem 1 to create a function that accepts the temperature at two times, ambient temperature, and the time elapsed to return $K$. 
+2. Change your work from problem 1 to create a function that accepts the temperature at two times, ambient temperature, and the time elapsed to return $K$.
 
 ```{code-cell} ipython3
+
 ```
 
 ```{code-cell} ipython3
+
 ```
 
 3. A first-order thermal system has the following analytical solution, 
@@ -57,4 +61,5 @@ Assume ambient temperature is a constant 65$^{o}$F.
     c. At what time was the corpse 98.6$^{o}$F? i.e. what was the time of death?
 
 ```{code-cell} ipython3
+
 ```

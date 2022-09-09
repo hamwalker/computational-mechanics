@@ -69,7 +69,11 @@ import matplotlib.pyplot as plt
 Calculate the terminal velocity for the given parameters, g=9.81 m/s$^2$, c=0.25 kg/m, m=60 kg.
 
 ```{code-cell} ipython3
-
+c=0.25 
+m=60
+g=9.81 
+vTerminal= np.sqrt((m*g)/c)
+print(vTerminal)
 ```
 
 ```{code-cell} ipython3
@@ -95,6 +99,8 @@ def v_analytical(t,m,g,c):
     v_terminal=np.sqrt(m*g/c)
     v= v_terminal*np.tanh(g*t/v_terminal)
     return v
+
+v_analytical()
 ```
 
 ```{code-cell} ipython3
