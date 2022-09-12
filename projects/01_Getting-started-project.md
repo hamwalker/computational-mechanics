@@ -35,17 +35,33 @@ Assume ambient temperature is a constant 65$^{o}$F.
 1. Use Python to calculate $K$ using a finite difference approximation, $\frac{dT}{dt} \approx \frac{T(t+\Delta t)-T(t)}{\Delta t}$.
 
 ```{code-cell} ipython3
+dt = 2
+T0 = 85
+T2 = 74
+T_amb = 65
 
+DTdt = (T2-T0)/dt
+
+print('Forward  diffrence: K= {:1.2f}' .format(DTdt/-(T0-T_amb)))
+print('Backward diffrence: K= {:1.2f}' .format(DTdt/-(T2-T_amb)))
 ```
 
 2. Change your work from problem 1 to create a function that accepts the temperature at two times, ambient temperature, and the time elapsed to return $K$.
 
 ```{code-cell} ipython3
+K = -((T2-T0)/dt)/(T0-T_amb)
 
-```
+def ret_k(T0, T2, T_amb, dt):
+    '''Takes 2 temperature values, ambient temperature, and elapased time 
+    and returns K using forward diffrence 
+    T0 = Temp 1
+    T2 = Temp 2
+    T_amb = ambient temp
+    dT = Change in time'''
+    K = -((T2-T0)/dt)/(T0-T_amb)
+    return K
 
-```{code-cell} ipython3
-
+k= ret_k(T0, T2, T_amb, dt)
 ```
 
 3. A first-order thermal system has the following analytical solution, 
@@ -61,5 +77,27 @@ Assume ambient temperature is a constant 65$^{o}$F.
     c. At what time was the corpse 98.6$^{o}$F? i.e. what was the time of death?
 
 ```{code-cell} ipython3
+t = np.linspace(0, 2, 21)
+dt = t[1]- t[0]
+T_amb = 65
+K = 1
 
+T_eul_f = np.zeros(len(t))
+T_eul_b = np.zeros(len(t))
+
+T_eul_f[0] = 85
+T_eul_b[0] = 85
+
+for i in range(1, len(t)):
+    T_eul_f[i] = T_eul_f[i-1] - K*(T_eul_f[i-1] - T_amb)*dt
+    T_eul_b[i] = T_eul_b[i-1] + K*(T_eul_b[i-1] - T_amb)*dt
+
+T_eul_b[T_eul_b > 98.6] = 98.6
+    
+plt.plot(-t, T_eul_b,  label='Before Body Discovery')
+plt.plot(t, T_eul_f, label='After Body Discovery')
+plt.legend(loc='best')
+# plt.grid(axis='both')
+plt.ylabel('Body Temperature ($^\circ F$)')
+plt.xlabel('Time (hours)');
 ```
