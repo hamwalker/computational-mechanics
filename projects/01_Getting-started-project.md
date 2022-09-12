@@ -44,6 +44,8 @@ DTdt = (T2-T0)/dt
 
 print('Forward  diffrence: K= {:1.2f}' .format(DTdt/-(T0-T_amb)))
 print('Backward diffrence: K= {:1.2f}' .format(DTdt/-(T2-T_amb)))
+
+K= (DTdt/-(T0-T_amb)+DTdt/-(T2-T_amb))/2
 ```
 
 2. Change your work from problem 1 to create a function that accepts the temperature at two times, ambient temperature, and the time elapsed to return $K$.
@@ -80,24 +82,52 @@ k= ret_k(T0, T2, T_amb, dt)
 t = np.linspace(0, 2, 21)
 dt = t[1]- t[0]
 T_amb = 65
-K = 1
+# K = 1
 
 T_eul_f = np.zeros(len(t))
 T_eul_b = np.zeros(len(t))
+T_anal_b = np.zeros(len(t))
+T_anal_f = T_anal_b
+
 
 T_eul_f[0] = 85
 T_eul_b[0] = 85
+T_anal_b[0] = 85 
+
+T_anal_b= T_amb+(T_anal_b[0] - T_amb)*np.exp(K*t)
+T_anal_f= T_amb+(T_anal_b[0] - T_amb)*np.exp(-K*t)
 
 for i in range(1, len(t)):
     T_eul_f[i] = T_eul_f[i-1] - K*(T_eul_f[i-1] - T_amb)*dt
     T_eul_b[i] = T_eul_b[i-1] + K*(T_eul_b[i-1] - T_amb)*dt
 
 T_eul_b[T_eul_b > 98.6] = 98.6
-    
+T_anal_b[T_anal_b > 98.6] = 98.6
+
 plt.plot(-t, T_eul_b,  label='Before Body Discovery')
 plt.plot(t, T_eul_f, label='After Body Discovery')
+plt.plot(-t, T_anal_b,'s',t, T_anal_f,'s', label='Analytical solution')
+# plt.plot('s', label='Analytical solution')
 plt.legend(loc='best')
 # plt.grid(axis='both')
 plt.ylabel('Body Temperature ($^\circ F$)')
 plt.xlabel('Time (hours)');
+```
+
+The temperature as t$\rightarrow\infty$ will be equal to $T_{amb}$ 
+
+The analytical solutions converge to the euler approximation.
+
+```{code-cell} ipython3
+living= T_eul_b==98.6
+np.flip(living)
+
+for i in living:
+    if living[i]== True:
+        time=i
+```
+
+```{code-cell} ipython3
+living= T_eul_b==98.6
+living(3)
 ```
