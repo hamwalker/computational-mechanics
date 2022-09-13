@@ -18,6 +18,10 @@ import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
 ```
 
+```{code-cell} ipython3
+
+```
+
 # Computational Mechanics Project #01 - Heat Transfer in Forensic Science
 
 We can use our current skillset for a macabre application. We can predict the time of death based upon the current temperature and change in temperature of a corpse. 
@@ -119,15 +123,8 @@ The temperature as t$\rightarrow\infty$ will be equal to $T_{amb}$
 The analytical solutions converge to the euler approximation.
 
 ```{code-cell} ipython3
-living= T_eul_b==98.6
-np.flip(living)
-
-for i in living:
-    if living[i]== True:
-        time=i
+print(T_eul_b)
+print(t)
 ```
 
-```{code-cell} ipython3
-living= T_eul_b==98.6
-living(3)
-```
+Time of death was 1.9 hours before the body was discovered
