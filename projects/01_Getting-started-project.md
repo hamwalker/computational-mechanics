@@ -18,14 +18,6 @@ import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
 ```
 
-```{code-cell} ipython3
-
-```
-
-```{code-cell} ipython3
-
-```
-
 # Computational Mechanics Project #01 - Heat Transfer in Forensic Science
 
 We can use our current skillset for a macabre application. We can predict the time of death based upon the current temperature and change in temperature of a corpse. 
@@ -117,7 +109,8 @@ plt.plot(t, T_eul_f, label='After Body Discovery')
 plt.plot(-t, T_anal_b,'s',t, T_anal_f,'s', label='Analytical solution')
 plt.legend(loc='best')
 plt.ylabel('Body Temperature ($^\circ F$)')
-plt.xlabel('Time (hours)');
+plt.xlabel('Time (hours)')
+plt.title('Body Temperature vs. Time');
 ```
 
 The temperature as t$\rightarrow\infty$ will be equal to $T_{amb}$ 
@@ -131,8 +124,4 @@ tod= -1/K*np.log((T_bod-T_amb)/(T0-T_amb))
 # print(tod*60)
 
 print('TOD was {:3.1f} hours before the body was found at 1009' .format(-tod))
-
-
-
-
 ```
