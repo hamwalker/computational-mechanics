@@ -22,6 +22,10 @@ plt.style.use('fivethirtyeight')
 
 ```
 
+```{code-cell} ipython3
+
+```
+
 # Computational Mechanics Project #01 - Heat Transfer in Forensic Science
 
 We can use our current skillset for a macabre application. We can predict the time of death based upon the current temperature and change in temperature of a corpse. 
@@ -86,7 +90,7 @@ k= ret_k(T0, T2, T_amb, dt)
 t = np.linspace(0, 2, 21)
 dt = t[1]- t[0]
 T_amb = 65
-# K = 1
+K = 0.61
 
 T_eul_f = np.zeros(len(t))
 T_eul_b = np.zeros(len(t))
@@ -111,9 +115,7 @@ T_anal_b[T_anal_b > 98.6] = 98.6
 plt.plot(-t, T_eul_b,  label='Before Body Discovery')
 plt.plot(t, T_eul_f, label='After Body Discovery')
 plt.plot(-t, T_anal_b,'s',t, T_anal_f,'s', label='Analytical solution')
-# plt.plot('s', label='Analytical solution')
 plt.legend(loc='best')
-# plt.grid(axis='both')
 plt.ylabel('Body Temperature ($^\circ F$)')
 plt.xlabel('Time (hours)');
 ```
@@ -123,8 +125,14 @@ The temperature as t$\rightarrow\infty$ will be equal to $T_{amb}$
 The analytical solutions converge to the euler approximation.
 
 ```{code-cell} ipython3
-print(T_eul_b)
-print(t)
-```
+T_bod= 98.6
+tod= -1/K*np.log((T_bod-T_amb)/(T0-T_amb))
 
-Time of death was 1.9 hours before the body was discovered
+# print(tod*60)
+
+print('TOD was {:3.1f} hours before the body was found at 1009' .format(-tod))
+
+
+
+
+```
