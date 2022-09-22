@@ -5,9 +5,9 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.10.3
+    jupytext_version: 1.11.4
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
@@ -33,7 +33,7 @@ The [NASA Goddard Space Flight Center](http://svs.gsfc.nasa.gov/goto?3901) is on
 
 The term [global temperature anomaly](https://www.ncdc.noaa.gov/monitoring-references/faq/anomalies.php) means the difference in temperature with respect to a reference value or a long-term average. It is a very useful way of looking at the problem and in many ways better than absolute temperature. For example, a winter month may be colder than average in Washington DC, and also in Miami, but the absolute temperatures will be different in both places.
 
-```{code-cell} ipython3
+```{code-cell}
 from IPython.display import YouTubeVideo
 YouTubeVideo('gGOzHVUQCw0')
 ```
@@ -46,7 +46,9 @@ We are going to smooth the data and then you'll fit a line to it to find a trend
 
 Let's get started!
 
-+++
+```{code-cell}
+1+1
+```
 
 ## Step 1: Read a data file
 
@@ -58,14 +60,14 @@ We have a file named `land_global_temperature_anomaly-1880-2016.csv` in our `dat
 
 Start by importing NumPy and pandas
 
-```{code-cell} ipython3
+```{code-cell}
 import numpy as np
 import pandas as pd
 ```
 
-To load our data from the file, you'll use the function [`numpy.loadtxt()`](https://docs.scipy.org/doc/numpy/reference/generated/numpy.loadtxt.html), which lets us immediately save the data into NumPy arrays. (We encourage you to read the documentation for details on how the function works.) Here, you'll save the data into the arrays `year` and `temp_anomaly`. 
+To load our data from the file, you'll use the function [`numpy.loadtxt()`](https://docs.scipy.org/doc/numpy/reference/generated/numpy.loadtxt.html), which lets us immediately save the data into NumPy arrays. (We encourage you to read the documentation for details on how the function works.) Here, you'll save the data into the arrays `year` and `temp_anomaly`.
 
-```{code-cell} ipython3
+```{code-cell}
 fname = '../data/land_global_temperature_anomaly-1880-2016.csv'
 
 temp_data = pd.read_csv(fname,skiprows=4)
@@ -75,7 +77,7 @@ temp_data = pd.read_csv(fname,skiprows=4)
 
 Inspect the data by printing `temp_data`.
 
-```{code-cell} ipython3
+```{code-cell}
 temp_data
 ```
 
@@ -83,7 +85,7 @@ temp_data
 
 Let's first load the **Matplotlib** module called `pyplot`, for making 2D plots. Remember that to get the plots inside the notebook, you use a special "magic" command, `%matplotlib inline`:
 
-```{code-cell} ipython3
+```{code-cell}
 import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
 %matplotlib inline
@@ -91,7 +93,7 @@ plt.style.use('fivethirtyeight')
 
 The `plot()` function of the `pyplot` module makes simple line plots. You avoid that stuff that appeared on top of the figure, that `Out[x]: [< ...>]` ugliness, by adding a semicolon at the end of the plotting command.
 
-```{code-cell} ipython3
+```{code-cell}
 #You can set the size of the figure by doing:
 plt.figure(figsize=(10,5))
 
@@ -116,7 +118,7 @@ $$
 The notation above means that $f$ is a function of $x$, with $m+1$ variable parameters $a_0, a_1, ... , a_m$, where $m < n$. You need to choose the form of $f(x)$ _a priori_, by inspecting the experimental data and knowing something about the phenomenon you've measured. Thus, curve fitting consists of two steps: 
 
 1. Choosing the form of $f(x)$.
-2. Computing the parameters that will give us the "best fit" to the data. 
+2. Computing the parameters that will give us the "best fit" to the data.
 
 +++
 
@@ -148,7 +150,7 @@ $$
 \end{equation*}~~~~~~(3)
 $$
 
-which results in equations (2) being linear. In the case that the fitting function is polynomial, you have have $f_0(x) = 1, \; f_1(x) = x, \; f_2(x) = x^2$, and so on.  
+which results in equations (2) being linear. In the case that the fitting function is polynomial, you have have $f_0(x) = 1, \; f_1(x) = x, \; f_2(x) = x^2$, and so on.
 
 +++
 
@@ -277,7 +279,7 @@ In our case, the `x`-data corresponds to `Year`, and the `y`-data is `Value`. To
 
 It is good coding practice to *avoid repeating* ourselves: you want to write code that is reusable, not only because it leads to less typing but also because it reduces errors. If you find yourself doing the same calculation multiple times, it's better to encapsulate it into a *function*. 
 
-Remember the _key concept_ from [02_Working_with_Python](../module_01/02_Working_with_Python): A function is a compact collection of code that executes some action on its arguments. 
+Remember the _key concept_ from [02_Working_with_Python](../module_01/02_Working_with_Python): A function is a compact collection of code that executes some action on its arguments.
 
 +++
 
@@ -287,7 +289,7 @@ Calculate the mean of the `year` and `temp_anomaly` arrays using the NumPy built
 
 Assign the means to `mean_x` and `mean_y`.
 
-```{code-cell} ipython3
+```{code-cell}
 x = temp_data['Year']
 y = temp_data['Value']
 
@@ -303,14 +305,13 @@ Our coefficients are:
 
 $$
     a_1 = \frac{ \sum_{i=0}^{n} y_{i} (x_i - \bar{x})}{\sum_{i=0}^{n} x_i (x_i - \bar{x})} \quad , \quad a_0  = \bar{y} - a_1\bar{x}
-$$ 
+$$
 
 +++
 
 We already calculated the mean values of the data arrays, but the formula requires two sums over new derived arrays. Guess what, NumPy has a built-in function for that: [`numpy.sum()`](https://docs.scipy.org/doc/numpy/reference/generated/numpy.sum.html). Study the code below.
 
-```{code-cell} ipython3
-
+```{code-cell}
 xi = temp_data['Year'].values
 yi = temp_data['Value'].values
 
@@ -320,15 +321,15 @@ y_mean = np.mean(yi)
 a_1 = np.sum(yi*(xi - x_mean)) / np.sum(xi*(xi - x_mean)) 
 ```
 
-```{code-cell} ipython3
+```{code-cell}
 print(a_1)
 ```
 
-```{code-cell} ipython3
+```{code-cell}
 a_0 = y_mean - a_1*x_mean
 ```
 
-```{code-cell} ipython3
+```{code-cell}
 print(a_0)
 ```
 
@@ -348,7 +349,7 @@ def coefficients(x, y, x_mean, y_mean):
     return a_1, a_0
 ```
 
-```{code-cell} ipython3
+```{code-cell}
 def coefficients(x, y, x_mean, y_mean):
     """
     Write docstrings here
@@ -369,7 +370,7 @@ def coefficients(x, y, x_mean, y_mean):
     return a_1, a_0
 ```
 
-```{code-cell} ipython3
+```{code-cell}
 coefficients(xi,yi,x_mean,y_mean) # verify result is the same as above
 ```
 
@@ -377,13 +378,13 @@ We now have the coefficients of a linear function that best fits our data. With 
 
 Let's call `reg` the array obtined from evaluating $f(x_i)$ for all years.
 
-```{code-cell} ipython3
+```{code-cell}
 reg = a_0 + a_1 * xi
 ```
 
-With the values of our linear regression, you can plot it on top of the original data to see how they look together. Study the code below. 
+With the values of our linear regression, you can plot it on top of the original data to see how they look together. Study the code below.
 
-```{code-cell} ipython3
+```{code-cell}
 plt.figure(figsize=(10, 5))
 
 plt.plot(xi, yi,'s', color='#2929a3', linewidth=1, alpha=0.5,label='Measured anomoly') 
@@ -404,22 +405,22 @@ Yes! Python and NumPy are here to help! With [`polyfit()`](https://docs.scipy.or
 
 Check it out:
 
-```{code-cell} ipython3
+```{code-cell}
 # First fit with NumPy, then name the coefficients obtained a_1n, a_0n:
 a_1n, a_0n = np.polyfit(xi, yi, 1)
 
 f_linear = np.poly1d((a_1n, a_0n)) 
 ```
 
-```{code-cell} ipython3
+```{code-cell}
 print(a_1n)
 ```
 
-```{code-cell} ipython3
+```{code-cell}
 print(a_0n)
 ```
 
-```{code-cell} ipython3
+```{code-cell}
 print(f_linear)
 ```
 
@@ -429,19 +430,19 @@ The assignment `f_linear = np.poly1d((a_1n,a_0n))` creates a 1D polynomial. This
 f_linear = lambda x: a_1n*x + a_0n
 ```
 
-In the line of code given above, you create the same assignment for `f_linear(x)`. One benefit of writing this out yourself is that you can see how each input is used directly. 
+In the line of code given above, you create the same assignment for `f_linear(x)`. One benefit of writing this out yourself is that you can see how each input is used directly.
 
 +++
 
 ## Exercise
 
-Use the `lambda` function to assign `f_linear` to our 1D polynomial instead of the `np.poly1d` assignment. 
+Use the `lambda` function to assign `f_linear` to our 1D polynomial instead of the `np.poly1d` assignment.
 
-```{code-cell} ipython3
+```{code-cell}
 f_linear = lambda x: a_1n*x+a_0n
 ```
 
-```{code-cell} ipython3
+```{code-cell}
 plt.figure(figsize=(10, 5))
 
 plt.plot(xi, yi,'s', color='#2929a3', linewidth=1, alpha=0.5,label='Measured anomoly')
@@ -460,15 +461,15 @@ If you look at the plot above, you might notice that around 1970 the temperature
 
 What if you break the data in two (before and after 1970) and do a linear regression in each segment? 
 
-To do that, you first need to find the position in our `year` array where the year 1970 is located. Thankfully, NumPy has a function called  [`numpy.where()`](https://docs.scipy.org/doc/numpy/reference/generated/numpy.where.html) that can help us. You pass a condition and `numpy.where()` tells us where in the array the condition is `True`. 
+To do that, you first need to find the position in our `year` array where the year 1970 is located. Thankfully, NumPy has a function called  [`numpy.where()`](https://docs.scipy.org/doc/numpy/reference/generated/numpy.where.html) that can help us. You pass a condition and `numpy.where()` tells us where in the array the condition is `True`.
 
-```{code-cell} ipython3
+```{code-cell}
 np.where(xi==1970)
 ```
 
 To split the data, you use the powerful instrument of _slicing_ with the colon notation. Remember that a colon between two indices indicates a range of values from a `start` to an `end`. The rule is that `[start:end]` includes the element at index `start` but excludes the one at index `end`. For example, to grab the first 3 years in our `year` array, you do:
 
-```{code-cell} ipython3
+```{code-cell}
 year = x
 temp_anomaly = y
 year[0:3]
@@ -476,7 +477,7 @@ year[0:3]
 
 Now you know how to split our data in two sets, to get two regression lines. You need two slices of the arrays `year` and `temp_anomaly`, which you'll save in new variable names below. After that, you complete two linear fits using the helpful NumPy functions you learned above.
 
-```{code-cell} ipython3
+```{code-cell}
 year_1 , temp_anomaly_1 = year[0:90], temp_anomaly[0:90]
 year_2 , temp_anomaly_2 = year[90:], temp_anomaly[90:]
 
@@ -487,7 +488,7 @@ f_linear_1 = np.poly1d((m1, b1))
 f_linear_2 = np.poly1d((m2, b2))
 ```
 
-```{code-cell} ipython3
+```{code-cell}
 plt.figure(figsize=(10, 5))
 
 plt.plot(year, temp_anomaly, color='#2929a3', linestyle='-', linewidth=1, alpha=0.5) 
