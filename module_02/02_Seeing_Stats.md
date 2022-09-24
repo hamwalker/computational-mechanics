@@ -461,7 +461,7 @@ What you imagined is that you could group together the beers by style, and then 
 
 Better yet! We'll make the size of the "dot" proportional to the popularity of the style in your data set! This is called a **bubble chart**.
 
-How to achieve this idea? you searched online for "mean of a column with pandas" and you landed in [`dataframe.mean()`](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.mean.html). This could be helpful… But you don't want the mean of a _whole_ column—we want the mean of the column values grouped by _style_. Searching online again, you landed in [`dataframe.groupby()`](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.groupby.html). This is amazing: `pandas` can group a series for you! 
+How to achieve this idea? you searched online for "mean of a column with pandas" and you landed in [`dataframe.mean()`](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.mean.html). This could be helpful… But you don't want the mean of a _whole_ column—we want the mean of the column values grouped by _style_. beers_styles = beers_clean.drop(['Unnamed: 0','name','brewery_id','ounces','id'], axis=1). This is amazing: `pandas` can group a series for you! 
 
 Here's what you want to do: group beers by style, then compute the mean of `abv` and `ibu` in the groups. You experimented with `beers_clean.groupby('style').mean()` and were amazed… However, one thing was bothersome: `pandas` computed the mean (by style) of every column, including the `id` and `brewery_id`, which have no business being averaged. So you decided to first drop the columns you don't need, leaving only `abv`, `ibu` and `style`. You can use the [`dataframe.drop()`](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.drop.html) method for that. Check it out!
 
@@ -473,6 +473,7 @@ We now have a dataframe with only the numeric features `abv` and `ibu`, and the 
 
 ```{code-cell} ipython3
 style_counts = beers_styles['style'].value_counts()
+style_counts
 ```
 
 ```{code-cell} ipython3
@@ -531,9 +532,11 @@ That's rad! Perhaps the bubbles are too small. You could multiply the `style_cou
 
 But you are feeling gung-ho about this now, and decided to find a way to make the _color_ of the bubbles also vary with the style counts. Below, you import the [`colormap`](https://matplotlib.org/api/cm_api.html) module of Matplotlib, and you set your colors using the [_viridis_ colormap](https://matplotlib.org/examples/color/colormaps_reference.html) on the values of `style_counts`, then you repeat the plot with these colors on the bubbles and some transparency. _What do you think?_
 
-```{code-cell} ipython3
+```{raw-cell}
 from matplotlib import cm
 colors = cm.viridis(style_counts.values)
+
+style_means
 ```
 
 ```{code-cell} ipython3

@@ -5,9 +5,9 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.10.3
+    jupytext_version: 1.11.4
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
@@ -131,8 +131,8 @@ def montecarlopi(N):
     '''
     
 
-    x = rng.random(N,1);
-    y = rng.random(N,1);
+    x = rng.random(N,);
+    y = rng.random(N,);
     R=np.sqrt(x**2+y**2); # compute radius
     num_in_circle=sum(R<1);
     total_num_pts =len(R);
