@@ -256,5 +256,84 @@ symb = 'XOM'
 
 ```{code-cell} ipython3
 xom_data = data[data['symbol'] == symb]
+xom_data
+
+
+# slicer= [pd.to_datetime("6-1-2010"), pd.to_datetime("7-1-2014")]
+# slicer= [pd.to_datetime("7-1-2014"), xom_data['date'].iat[-320]]
+slicer = [ xom_data['date'].iat[0],  xom_data['date'].iat[-1]]
+slicer_delta = slicer[1]-slicer[0]
+
+xom_slice = xom_data[np.logical_and(slicer[0] < xom_data['date'], xom_data['date'] < slicer[1])]
+
+
 plt.plot(xom_data['date'], xom_data['open'])
+plt.plot(xom_slice['date'], xom_slice['open'])
+plt.xlabel('date')
+plt.ylabel('opening price (\$)');
+```
+
+```{code-cell} ipython3
+dprice = np.diff(xom_slice['open'])
+plt.plot(xom_slice['date'][1:], dprice)
+plt.xlabel('date')
+plt.ylabel('change in opening price (\$/day)');
+```
+
+```{code-cell} ipython3
+mean_dprice = np.mean(dprice)
+std_dprice = np.std(dprice)
+x = np.linspace(-5, 5)
+from scipy import stats
+price_pdf = stats.norm.pdf(x, loc = mean_dprice, scale = std_dprice)
+
+plt.hist(dprice, 50, density=True)
+plt.plot(x, price_pdf)
+plt.title('XOM changes in price over 4 years\n'+
+         'avg: \${:.2f} stdev: \${:.2f}'.format(mean_dprice, std_dprice));
+```
+
+```{code-cell} ipython3
+rng = default_rng(42)
+N_models = 100
+dprice_model = rng.normal(size = (len(xom_slice), N_models), loc = mean_dprice, scale = std_dprice)
+
+plt.hist(dprice, 50, density=True, label = 'NYSE data')
+plt.plot(x, price_pdf)
+plt.hist(dprice_model[:, 0], 50, density = True, 
+         histtype = 'step', 
+         linewidth = 3, label = 'model prediction 1')
+plt.title('XOM changes in price over 4 years\n'+
+         'avg: \${:.2f} stdev: \${:.2f}'.format(mean_dprice, std_dprice))
+plt.legend();
+```
+
+```{code-cell} ipython3
+price_model = np.cumsum(dprice_model, axis = 0) + xom_slice['open'].values[0]
+
+plt.plot(xom_slice['date'], price_model, alpha = 0.3);
+
+plt.plot(xom_slice['date'], xom_slice['open'], c = 'k', label = 'NYSE data')
+plt.xlabel('date')
+plt.ylabel('opening price (\$)');
+```
+
+```{code-cell} ipython3
+price_model_avg = np.mean(price_model, axis = 1)
+price_model_std = np.std(price_model, axis = 1)
+
+plt.plot(xom_slice['date'], price_model, alpha = 0.3);
+
+plt.plot(xom_slice['date'], xom_slice['open'], c = 'k', label = 'NYSE data')
+plt.xlabel('date')
+plt.ylabel('opening price (\$)');
+
+skip = 100
+plt.errorbar(xom_slice['date'][::skip], price_model_avg[::skip],
+             yerr = price_model_std[::skip], 
+             fmt = 'o',
+             c = 'r', 
+             label = 'model result', 
+            zorder = 3);
+plt.legend();
 ```
