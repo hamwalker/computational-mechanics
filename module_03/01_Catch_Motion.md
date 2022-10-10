@@ -5,9 +5,9 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.10.3
+    jupytext_version: 1.11.4
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
@@ -242,7 +242,7 @@ v_i = \frac{y_{i+1}-y_i}{\Delta t}, \qquad a_i = \frac{v_{i+1}-v_i}{\Delta t}
 \end{equation}
 
 ```{code-cell} ipython3
-y_coords = np.array(coords)[:,1]
+y_coords = np.array(coords)[1:,1]
 delta_y = (y_coords[1:] - y_coords[:-1]) *0.25 / gap_lines.mean()
 ```
 
