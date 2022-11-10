@@ -5,9 +5,9 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.10.3
+    jupytext_version: 1.11.4
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
@@ -85,10 +85,27 @@ b. Why is the condition of `K` so large? __The problem is underconstrained. It 
 c. What error would you expect when you solve for `u[2:13]` in `K[2:13,2:13]*u=F[2:13]`
 
 ```{code-cell} ipython3
+# print(np.linalg.cond(K))
+# print(np.linalg.cond(K[2:13,2:13]))
+
+# print('expected error in x=solve(K,b) is {}'.format(10**(16-16)))
+# print('expected error in x=solve(K[2:13,2:13],b) is {}'.format(10**(2-16)))
+```
+
+```{code-cell} ipython3
+# 1a
+print('Expected error in x=solve(K,b) is {}'.format(10**(16-16)))
+```
+
+```{code-cell} ipython3
+# 1b
 print(np.linalg.cond(K))
 print(np.linalg.cond(K[2:13,2:13]))
+print('The problem is underconstrained. Does not use boundary conditions')
+```
 
-print('expected error in x=solve(K,b) is {}'.format(10**(16-16)))
+```{code-cell} ipython3
+# 1c
 print('expected error in x=solve(K[2:13,2:13],b) is {}'.format(10**(2-16)))
 ```
 
@@ -117,7 +134,89 @@ d. Create a plot of the undeformed and deformed structure with the displacements
 ![Deformed structure with loads applied](../images/deformed_truss.png)
 
 ```{code-cell} ipython3
- 
+# 2
+from scipy.linalg import lu
+```
+
+```{code-cell} ipython3
+l=300 # mm
+nodes = np.array([[1,0,0],[2,0.5,3**0.5/2],[3,1,0],[4,1.5,3**0.5/2],[5,2,0],[6,2.5,3**0.5/2],[7,3,0]])
+nodes[:,1:3]*=l
+elems = np.array([[1,1,2],[2,2,3],[3,1,3],[4,2,4],[5,3,4],[6,3,5],[7,4,5],[8,4,6],[9,5,6],[10,5,7],[11,6,7]])
+
+Ff=np.zeros(2*len(nodes)-3)
+Ff[5]=-300
+
+Est = 200e3
+Eal = 70e3
+A = 0.1
+
+P,L,U = lu(K[2:13,2:13]) # a built-in partial-pivoting LU decomposition function
+
+solf = np.linalg.solve(L,Ff)
+
+uf = np.linalg.solve(U,solf)
+
+u=np.zeros(2*len(nodes))
+u[2:13] = uf
+forces = K@u
+ust = u/(Est*A)
+ual = u/(Eal*A)
+
+xy={0:'x',1:'y'}
+print('displacements Steel:\n----------------')
+for i in range(len(u)):
+    print('u_{}{}:{:.2f} mm'.format(int(i/2)+1,xy[i%2],uSt[i]))
+print('displacements Al:\n----------------')
+for i in range(len(u)):
+    print('u_{}{}:{:.2f} mm'.format(int(i/2)+1,xy[i%2],ual[i]))
+print('\nReaction forces:\n----------------')
+for i in range(len(forces)):
+    print('F_{}{}:{:.2f} N'.format(int(i/2)+1,xy[i%2],forces[i]))
+```
+
+```{code-cell} ipython3
+# 2d
+ix = 2*np.block([[np.arange(0,5)],[np.arange(1,6)],[np.arange(2,7)],[np.arange(0,5)]])
+iy = ix+1
+
+r = np.block([n[1:3] for n in nodes])
+r
+
+from __future__ import print_function
+from ipywidgets import interact, interactive, fixed, interact_manual
+
+import ipywidgets as widgets
+
+# def fst(s):
+s=1
+plt.plot(r[ix],r[iy],'-',color=(0,0,0,1))
+plt.plot(r[ix]+ust[ix]*s,r[iy]+ust[iy]*s,'-',color=(1,0,0,1))
+#plt.quiver(r[ix],r[iy],u[ix],u[iy],color=(0,0,1,1),label='displacements')
+plt.quiver(r[ix],r[iy],forces[ix],forces[iy],color=(1,0,0,1),label='applied forces')
+plt.quiver(r[ix],r[iy],ust[ix],ust[iy],color=(0,0,1,1),label='displacements')
+plt.axis(l*np.array([-0.5,3.5,-0.5,2]))
+plt.xlabel('x (mm)')
+plt.ylabel('y (mm)')
+plt.title('Steel Deformation scale = {:.1f}x'.format(s))
+plt.legend(bbox_to_anchor=(1,0.5));
+# interact(fst,s=(0,10,1));
+```
+
+```{code-cell} ipython3
+s=1
+# def fal(s):
+plt.plot(r[ix],r[iy],'-',color=(0,0,0,1))
+plt.plot(r[ix]+ual[ix]*s,r[iy]+ual[iy]*s,'-',color=(1,0,0,1))
+#plt.quiver(r[ix],r[iy],u[ix],u[iy],color=(0,0,1,1),label='displacements')
+plt.quiver(r[ix],r[iy],forces[ix],forces[iy],color=(1,0,0,1),label='applied forces')
+plt.quiver(r[ix],r[iy],ual[ix],ual[iy],color=(0,0,1,1),label='displacements')
+plt.axis(l*np.array([-0.5,3.5,-0.5,2]))
+plt.xlabel('x (mm)')
+plt.ylabel('y (mm)')
+plt.title('Al Deformation scale = {:.1f}x'.format(s))
+plt.legend(bbox_to_anchor=(1,0.5));
+# interact(fal,s=(0,10,1));
 ```
 
 ### 3. Determine cross-sectional area
@@ -130,7 +229,26 @@ c. What are the weights of the aluminum and steel trusses with the
 chosen cross-sectional areas?
 
 ```{code-cell} ipython3
+# 3a
+testarea = np.arange(0.5,100,0.05)
 
+ust_test=np.zeros(len(testarea))
+for i in range(len(testarea)):
+    ust_test = u/(Est*testarea[len(testarea)-1-i])
+    if max(ust_test)<0.2:
+        minsta = testarea[len(testarea)-1-i]
+
+print('min steel cross section: {:1.2f}mm for def < 0.2mm'.format(minsta))
+```
+
+```{code-cell} ipython3
+ual_test=np.zeros(len(testarea))
+for i in range(len(testarea)):
+    ust_test = u/(Eal*testarea[len(testarea)-1-i])
+    if max(ust_test)<0.2:
+        minala = testarea[len(testarea)-1-i]
+
+print('min Al cross section: {:1.2f}mm for def < 0.2mm'.format(minala))
 ```
 
 ## References

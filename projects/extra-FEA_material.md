@@ -5,9 +5,9 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.10.3
+    jupytext_version: 1.11.4
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
@@ -404,10 +404,10 @@ In FEA, you have applied forces, in $\mathbf{F}$, and displacement in $\mathbf{u
 2. plug in `u` to solve for `F` at constrained degrees of freedom $\rightarrow \mathbf{F}=\mathbf{K}\mathbf{u}$
 
 ```{code-cell} ipython3
-E=200e3
+E=75e3
 A=0.1
 Ff=np.zeros(2*len(nodes)-3)
-Ff[5]=-100
+Ff[5]=-300
 print(Ff)
 # step 1 solve for uf (the joints without constraints)
 uf = np.linalg.solve(E*A*K[2:13,2:13],Ff)
@@ -440,7 +440,7 @@ is what we see, since our the sum of the reaction forces is equal to the
 applied force.
 
 > __Note__: Run this in Jupyter to interact with the scale of
-> deformation.  
+> deformation.
 
 ```{code-cell} ipython3
 from __future__ import print_function
